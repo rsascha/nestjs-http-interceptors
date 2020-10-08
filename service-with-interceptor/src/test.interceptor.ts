@@ -16,14 +16,12 @@ export class TestInterceptor implements NestInterceptor {
     ) {}
 
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        this.logger.log('intercept');
+        this.logger.log('TestInterceptor - enter intercept');
         const request = context.switchToHttp().getRequest<Request>();
-        this.logger.log(request.headers);
         const acceptLanguage = request.headers['accept-language'];
-
         this.httpService.axiosRef.interceptors.request.use(config => {
-            this.logger.log(`Axios interceptor`);
-            this.logger.log(config.headers['common']);
+            this.logger.log(`TestInterceptor - enter Axios interceptor`);
+            this.logger.log(`config: ${JSON.stringify(config)}`);
             config.headers['common']['browser-language'] = acceptLanguage;
             return config;
         });
